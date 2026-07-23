@@ -100,9 +100,9 @@ a self-owned Route 53 zone — a deliberate cost choice to note in peer review.
 
 ## Phase 8 — Polish & Submit
 - [ ] Creative CSS / design pass
-- [ ] README: description + live URL + architecture diagram + setup steps
-- [ ] Verify `.gitignore` excludes `node_modules/`
-- [ ] Confirm "one component per file" + matching CSS rules honored
+- [x] README: description + live URL + architecture diagram + setup steps
+- [x] Verify `.gitignore` excludes `node_modules/`
+- [x] Confirm "one component per file" + matching CSS rules honored
 - [ ] Final end-to-end test on deployed site
 - [ ] Submit + prep for Peer Review
 

@@ -61,11 +61,12 @@ Using Amplify Gen 2 storage (per-identity access) instead of the Gen 1 commands 
 - [x] Wire `FileList` + `FileItem` to `list()` + `getUrl()` (download)
 
 ## Phase 4 — Metadata DB (DynamoDB)
-- [ ] `amplify add api` (GraphQL) or add DynamoDB table directly
-- [ ] Schema: `{ id, fileName, s3Key, owner, version, updatedAt }`
-- [ ] On upload → write DynamoDB record
-- [ ] `FileList` reads from DynamoDB
-- [ ] Add delete + rename actions in UI (update DynamoDB)
+Using Amplify Gen 2 data (`defineData`, owner-based auth) instead of the Gen 1 commands below.
+- [x] Define DynamoDB/AppSync data backend (`amplify/data/resource.ts`)
+- [x] Schema: `FileRecord { id, fileName, s3Key, owner, version, createdAt, updatedAt }` (id/owner/timestamps auto-managed)
+- [x] On upload → upsert DynamoDB record (bumps `version` on re-upload of same name)
+- [x] `FileList` reads from DynamoDB
+- [x] Add delete + rename actions in UI (update DynamoDB; S3 side synced by Phase 6 Lambdas)
 
 ## Phase 5 — Versioning — *Spec #3*
 - [ ] Enable S3 bucket versioning (or versioned keys like `file_v2.pdf`)

@@ -39,8 +39,9 @@ account, confirm it with the code emailed to you, then log in. The top bar shows
 email and a Sign out button.
 
 Once signed in you can upload files, which are stored privately in S3 under your own
-identity. Your files are listed below the upload form, each with a Download button.
-Every user only ever sees and accesses their own files.
+identity. Each upload also writes a metadata record to DynamoDB, and the file list is
+read from there. Every file has Download, Rename, and Delete actions, and every user
+only ever sees and accesses their own files.
 
 ### The Core Team
 gadirli_s

@@ -1,11 +1,26 @@
 # Welcome to My Backend Dropbox
 ***
 
+**Live app:** https://dev.d190ggic3r9qzw.amplifyapp.com
+
 ## Task
-TODO - What is the problem? And where is the challenge?
+Build a Dropbox-style file-synchronization service that is fully serverless on AWS,
+with a ReactJS frontend. It must let a user sign in, upload files to private storage,
+keep a version history of each file, and be reachable at a live URL with managed
+DNS/routing. The challenge is coordinating several managed services (auth, object
+storage, a metadata database, and event-driven functions) so that a change made in
+one place is reflected everywhere, without running or managing any servers.
 
 ## Description
-TODO - How have you solved the problem?
+The app is hosted on AWS Amplify (CloudFront + managed DNS) and wires together:
+Amazon Cognito for authentication, Amazon S3 for private per-user file storage,
+Amazon DynamoDB for file metadata, and two AWS Lambda functions that react to the
+metadata table's stream. Uploads go to S3 under a versioned key and record a metadata
+row; re-uploading the same name creates a new version instead of overwriting. Delete
+and rename only touch DynamoDB, and the Lambda functions keep S3 in step: one removes
+a file's objects when its record is deleted, the other copies objects under the new
+name when a record is renamed. Everything is defined in code (Amplify Gen 2) and
+deployed by the Amplify CI/CD pipeline on every push.
 
 ## Installation
 

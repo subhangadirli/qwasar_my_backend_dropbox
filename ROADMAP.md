@@ -89,8 +89,8 @@ support Qwasar's Gitea as a Git source, so the repo is mirrored to GitHub and co
 from there; every push then auto-deploys the backend (`ampx pipeline-deploy`) and builds
 the frontend per `amplify.yml`.
 - [x] Add `amplify.yml` build spec (backend deploy + `dist` frontend build)
-- [ ] Mirror repo to GitHub and connect the branch in the Amplify Console
-- [ ] Let the first CI/CD build deploy backend + frontend
+- [x] Mirror repo to GitHub and connect the branch in the Amplify Console
+- [x] Let the first CI/CD build deploy backend + frontend (live at `https://dev.d190ggic3r9qzw.amplifyapp.com`)
 - [ ] Confirm live URL works end-to-end (login → upload → version → rename → delete)
 
 **DNS/Routing note:** the app is served on the default `*.amplifyapp.com` URL, which

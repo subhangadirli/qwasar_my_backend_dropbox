@@ -8,13 +8,35 @@ TODO - What is the problem? And where is the challenge?
 TODO - How have you solved the problem?
 
 ## Installation
-TODO - How to install your project? npm install? make? make re?
+
+Prerequisites: an AWS account (free tier is enough) and AWS credentials configured
+locally (`aws configure` or `amplify configure`).
+
+```
+npm install
+```
 
 ## Usage
-TODO - How does it work?
+
+The backend is defined with AWS Amplify Gen 2 in the `amplify/` folder. It must be
+deployed once so the app receives its `amplify_outputs.json` (Cognito, and later S3
+and DynamoDB details). This file is generated on deploy and is git-ignored.
+
+Deploy a personal cloud sandbox and keep it running:
+
 ```
-./my_project argument1 argument2
+npx ampx sandbox
 ```
+
+In a second terminal, start the frontend:
+
+```
+npm run dev
+```
+
+Open the local URL. You will be greeted by the Cognito sign-in screen: create an
+account, confirm it with the code emailed to you, then log in. The top bar shows your
+email and a Sign out button.
 
 ### The Core Team
 

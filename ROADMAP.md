@@ -47,9 +47,10 @@ README.md          # live URL + description
 - [x] Run locally (`npm run dev`)
 
 ## Phase 2 — Authentication (Cognito) — *Spec #1*
-- [ ] `amplify add auth` → Cognito user pool (email login)
-- [ ] `amplify push`
-- [ ] Wrap app with `withAuthenticator`
+Using Amplify Gen 2 (code-first) instead of the Gen 1 CLI commands below.
+- [x] Define Cognito auth backend (`amplify/auth/resource.ts`, email login)
+- [x] Wrap app with `<Authenticator>` and add sign-out
+- [ ] Deploy: `npx ampx sandbox` (needs AWS credentials)
 - [ ] Verify: sign up → confirm email → log in
 
 ## Phase 3 — File Upload & Storage (S3) — *Spec #2*

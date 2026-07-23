@@ -3,3 +3,11 @@
   flex-direction: column;
   min-height: 100vh;
 }
+
+.app-main {
+  width: 100%;
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 0 1.25rem;
+  box-sizing: border-box;
+}

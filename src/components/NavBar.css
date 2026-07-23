@@ -2,14 +2,16 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 1.5rem;
-  background-color: #1f2933;
-  color: #ffffff;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  background-color: var(--bg);
+  border-bottom: 1px solid var(--border);
 }
 
 .nav-bar-brand {
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   font-weight: 600;
+  color: var(--text-strong);
 }
 
 .nav-bar-account {
@@ -19,21 +21,23 @@
 }
 
 .nav-bar-user {
-  font-size: 0.9rem;
-  color: #cbd2d9;
+  font-size: 0.85rem;
+  color: var(--muted);
 }
 
 .nav-bar-signout {
-  padding: 0.4rem 0.9rem;
+  padding: 0.35rem 0.85rem;
   font-size: 0.85rem;
-  font-weight: 600;
-  color: #1f2933;
-  background-color: #ffffff;
-  border: none;
-  border-radius: 4px;
+  font-weight: 500;
+  color: var(--text-strong);
+  background-color: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
   cursor: pointer;
+  transition: background-color 0.12s ease, border-color 0.12s ease;
 }
 
 .nav-bar-signout:hover {
-  background-color: #e4e7eb;
+  background-color: var(--surface-hover);
+  border-color: var(--muted);
 }

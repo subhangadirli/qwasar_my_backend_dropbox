@@ -31,8 +31,10 @@ function App() {
       {({ signOut, user }) => (
         <div className="app">
           <NavBar user={user} signOut={signOut} />
-          <UploadForm onUploaded={loadFiles} />
-          <FileList files={files} loading={loading} onChanged={loadFiles} />
+          <main className="app-main">
+            <UploadForm onUploaded={loadFiles} />
+            <FileList files={files} loading={loading} onChanged={loadFiles} />
+          </main>
         </div>
       )}
     </Authenticator>

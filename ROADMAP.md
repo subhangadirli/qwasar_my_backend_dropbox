@@ -22,11 +22,11 @@ Users → Route 53 (DNS) → Amplify (hosts React app + coordinates services)
 ---
 
 ## Phase 0 — Setup & Prerequisites
-- [ ] Create/verify AWS account (free tier)
-- [ ] Install tools: `node`, `npm`, AWS CLI, Amplify CLI (`npm i -g @aws-amplify/cli`)
-- [ ] `amplify configure` → create IAM user, set credentials
-- [ ] Init repo: React app + `.gitignore` (must exclude `node_modules/`)
-- [ ] Set up folder structure:
+- [x] Create/verify AWS account (free tier)
+- [x] Install tools: `node`, `npm`, Amplify Gen 2 CLI (`ampx` via `npx`, no global AWS CLI needed)
+- [x] Create IAM user (`amplify-dev`) and set credentials in `~/.aws/credentials`
+- [x] Init repo: Vite React app + `.gitignore` (excludes `node_modules/`)
+- [x] Set up folder structure:
 
 ```
 src/

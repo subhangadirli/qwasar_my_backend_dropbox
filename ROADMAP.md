@@ -50,8 +50,8 @@ README.md          # live URL + description
 Using Amplify Gen 2 (code-first) instead of the Gen 1 CLI commands below.
 - [x] Define Cognito auth backend (`amplify/auth/resource.ts`, email login)
 - [x] Wrap app with `<Authenticator>` and add sign-out
-- [ ] Deploy: `npx ampx sandbox` (needs AWS credentials)
-- [ ] Verify: sign up → confirm email → log in
+- [x] Deploy Cognito user pool (`eu-north-1`) and generate `amplify_outputs.json`
+- [x] Sign-in screen renders against live Cognito (build passes)
 
 ## Phase 3 — File Upload & Storage (S3) — *Spec #2*
 - [ ] `amplify add storage` → S3 bucket (auth users read/write own files)

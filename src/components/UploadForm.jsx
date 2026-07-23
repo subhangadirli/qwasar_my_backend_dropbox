@@ -16,28 +16,43 @@ function UploadForm({ onUploaded }) {
     setUploading(true);
     setError("");
     try {
+      const { data: existing } = await client.models.FileRecord.list({
+        filter: { fileName: { eq: file.name } },
+      });
+      const record = existing[0];
+      const nextVersion = (record?.version ?? 0) + 1;
+
+      // Each version gets its own S3 key so earlier versions stay downloadable
+      // and revertible instead of being overwritten by the next upload.
       const { path } = await uploadData({
-        path: ({ identityId }) => `files/${identityId}/${file.name}`,
+        path: ({ identityId }) =>
+          `files/${identityId}/${file.name}/v${nextVersion}`,
         data: file,
       }).result;
 
-      // Upsert the metadata record so re-uploading the same name bumps its
-      // version instead of creating a duplicate row.
-      const { data: existing } = await client.models.FileRecord.list({
-        filter: { s3Key: { eq: path } },
-      });
-      if (existing.length > 0) {
+      const fileRecordId = record
+        ? record.id
+        : (
+            await client.models.FileRecord.create({
+              fileName: file.name,
+              s3Key: path,
+              version: nextVersion,
+            })
+          ).data.id;
+
+      if (record) {
         await client.models.FileRecord.update({
-          id: existing[0].id,
-          version: (existing[0].version ?? 1) + 1,
-        });
-      } else {
-        await client.models.FileRecord.create({
-          fileName: file.name,
+          id: record.id,
           s3Key: path,
-          version: 1,
+          version: nextVersion,
         });
       }
+
+      await client.models.FileVersion.create({
+        fileRecordId,
+        version: nextVersion,
+        s3Key: path,
+      });
 
       setFile(null);
       event.target.reset();

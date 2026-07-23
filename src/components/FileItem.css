@@ -1,6 +1,7 @@
 .file-item {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 0.5rem 0.75rem;
   border-radius: 4px;
   background-color: #f5f7fa;
@@ -9,4 +10,18 @@
 .file-item-name {
   font-size: 0.95rem;
   color: #1f2933;
+}
+
+.file-item-download {
+  padding: 0.3rem 0.75rem;
+  font-size: 0.85rem;
+  color: #3182ce;
+  background-color: transparent;
+  border: 1px solid #3182ce;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.file-item-download:hover {
+  background-color: #ebf4ff;
 }

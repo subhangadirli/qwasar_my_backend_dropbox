@@ -19,3 +19,8 @@
   background-color: #a0aec0;
   cursor: not-allowed;
 }
+
+.upload-form-error {
+  font-size: 0.85rem;
+  color: #c53030;
+}

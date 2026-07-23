@@ -38,6 +38,10 @@ Open the local URL. You will be greeted by the Cognito sign-in screen: create an
 account, confirm it with the code emailed to you, then log in. The top bar shows your
 email and a Sign out button.
 
+Once signed in you can upload files, which are stored privately in S3 under your own
+identity. Your files are listed below the upload form, each with a Download button.
+Every user only ever sees and accesses their own files.
+
 ### The Core Team
 
 

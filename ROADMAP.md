@@ -54,11 +54,11 @@ Using Amplify Gen 2 (code-first) instead of the Gen 1 CLI commands below.
 - [x] Sign-in screen renders against live Cognito (build passes)
 
 ## Phase 3 — File Upload & Storage (S3) — *Spec #2*
-- [ ] `amplify add storage` → S3 bucket (auth users read/write own files)
-- [ ] `amplify push`
-- [ ] Wire `UploadForm` to `Storage.put()`
-- [ ] Wire `FileList` to `Storage.list()` + `Storage.get()`
-- [ ] Verify files land in S3 and appear in UI
+Using Amplify Gen 2 storage (per-identity access) instead of the Gen 1 commands below.
+- [x] Define S3 storage backend (`amplify/storage/resource.ts`, per-user access)
+- [x] Deploy S3 bucket (`npx ampx sandbox`)
+- [x] Wire `UploadForm` to `uploadData()`
+- [x] Wire `FileList` + `FileItem` to `list()` + `getUrl()` (download)
 
 ## Phase 4 — Metadata DB (DynamoDB)
 - [ ] `amplify add api` (GraphQL) or add DynamoDB table directly

@@ -69,9 +69,11 @@ Using Amplify Gen 2 data (`defineData`, owner-based auth) instead of the Gen 1 c
 - [x] Add delete + rename actions in UI (update DynamoDB; S3 side synced by Phase 6 Lambdas)
 
 ## Phase 5 — Versioning — *Spec #3*
-- [ ] Enable S3 bucket versioning (or versioned keys like `file_v2.pdf`)
-- [ ] On re-upload of same filename → new version, bump `version` in DynamoDB
-- [ ] UI: show version history / allow reverting
+Using versioned S3 keys (`files/{identityId}/{fileName}/v{n}`) instead of
+bucket-level versioning, so every version stays independently downloadable.
+- [x] Enable S3 bucket versioning (or versioned keys like `file_v2.pdf`)
+- [x] On re-upload of same filename → new version, bump `version` in DynamoDB
+- [x] UI: show version history / allow reverting
 
 ## Phase 6 — Lambda Sync Functions
 Two functions triggered by DynamoDB Streams:

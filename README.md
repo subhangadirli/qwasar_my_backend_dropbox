@@ -43,6 +43,12 @@ identity. Each upload also writes a metadata record to DynamoDB, and the file li
 read from there. Every file has Download, Rename, and Delete actions, and every user
 only ever sees and accesses their own files.
 
+Re-uploading a file with the same name does not overwrite it: each upload is stored
+under its own versioned S3 key and gets its own DynamoDB history entry, while the
+metadata record keeps pointing at the current version. Use the Versions button on a
+file to see its full history, download any past version, or revert to one, which
+copies that version's object forward as a new current version.
+
 ### The Core Team
 gadirli_s
 hajibala_n

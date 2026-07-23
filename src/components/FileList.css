@@ -1,0 +1,10 @@
+.file-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem 1.5rem;
+}
+
+.file-list-empty {
+  color: #7b8794;
+}

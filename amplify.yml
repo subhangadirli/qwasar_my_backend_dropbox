@@ -3,7 +3,10 @@ backend:
   phases:
     build:
       commands:
-        - npm ci --cache .npm --prefer-offline
+        # Use `npm install` (not `npm ci`): the AWS SDK dependency tree pulls in
+        # @opentelemetry/core@2.0.0 in a way npm's strict `ci` check rejects even
+        # for a freshly generated lockfile, so `install` reconciles it at build time.
+        - npm install --cache .npm --prefer-offline
         - npx ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
 frontend:
   phases:

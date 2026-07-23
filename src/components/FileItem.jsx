@@ -69,14 +69,31 @@ function FileItem({ file, onChanged }) {
     if (!newName || newName === file.fileName) {
       return;
     }
-    // Renames the metadata pointer only; the Phase 6 Lambda mirrors this in
-    // S3 by copying the current object under the new name and deleting the old.
-    const parts = file.s3Key.split("/");
-    parts[parts.length - 2] = newName;
+    // Swap the fileName segment of a versioned key (files/{id}/{name}/v{n}).
+    const renameKey = (key) => {
+      const parts = key.split("/");
+      parts[parts.length - 2] = newName;
+      return parts.join("/");
+    };
+    // Point every version row at its new key too, so version history stays
+    // downloadable after the Phase 6 rename Lambda moves the S3 objects.
+    const { data: fileVersions } = await client.models.FileVersion.list({
+      filter: { fileRecordId: { eq: file.id } },
+    });
+    await Promise.all(
+      fileVersions.map((version) =>
+        client.models.FileVersion.update({
+          id: version.id,
+          s3Key: renameKey(version.s3Key),
+        })
+      )
+    );
+    // Renaming the record's fileName is what triggers the Phase 6 Lambda that
+    // mirrors the move in S3 (copy under the new prefix, delete the old).
     await client.models.FileRecord.update({
       id: file.id,
       fileName: newName,
-      s3Key: parts.join("/"),
+      s3Key: renameKey(file.s3Key),
     });
     onChanged?.();
   }

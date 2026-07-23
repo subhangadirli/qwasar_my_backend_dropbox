@@ -22,6 +22,46 @@ a file's objects when its record is deleted, the other copies objects under the 
 name when a record is renamed. Everything is defined in code (Amplify Gen 2) and
 deployed by the Amplify CI/CD pipeline on every push.
 
+## Architecture
+
+```
+                Users
+                  |
+                  v
+        AWS Amplify Hosting            (CloudFront CDN + managed DNS/routing)
+        serves the React app
+                  |
+   +--------------+-----------------------------+
+   |              |                             |
+   v              v                             v
+ Cognito         S3                          DynamoDB
+ (sign in)   (file storage:              (file metadata:
+             files + versions)            FileRecord + FileVersion)
+                  ^                             |
+                  |                             | table stream
+                  |          +------------------+------------------+
+                  |          |                                     |
+                  |    REMOVE event                          MODIFY event
+                  |          |                                     |
+                  |          v                                     v
+                  |   Lambda #1 (delete-sync)            Lambda #2 (rename-sync)
+                  +-- delete all version objects   copy objects to new name,
+                      under the file's prefix       delete the old prefix ------+
+                                                                                |
+                  ^-------------------------------------------------------------+
+```
+
+### Data flows
+- **Upload:** file (or new version) -> S3 versioned key, metadata -> DynamoDB.
+- **Delete:** delete DynamoDB record -> table stream -> Lambda #1 -> remove the
+  file's objects from S3.
+- **Rename:** change file name in DynamoDB -> table stream -> Lambda #2 -> copy the
+  S3 objects under the new name, delete the old ones.
+
+Everything is defined in code under `amplify/` with Amplify Gen 2 (`defineAuth`,
+`defineStorage`, `defineData`, `defineFunction`) and the stream wiring lives in
+`amplify/backend.ts`.
+
 ## Installation
 
 Prerequisites: an AWS account (free tier is enough) and AWS credentials configured
@@ -68,6 +108,15 @@ Delete and rename only touch the DynamoDB metadata. Two Lambda functions subscri
 to the metadata table's stream keep S3 in step: deleting a record removes all of that
 file's version objects, and renaming a record copies its objects under the new name
 and removes the old ones.
+
+## Deployment
+
+The live app is hosted on AWS Amplify Hosting. The repository is connected to the
+Amplify Console, and every push to the `dev` branch runs the pipeline in `amplify.yml`:
+it deploys the backend (`npx ampx pipeline-deploy`) and builds the React frontend
+(`npm run build` into `dist/`), then serves it on CloudFront at the live URL above.
+No custom domain / Route 53 hosted zone is registered; the app uses the default
+`*.amplifyapp.com` URL with Amplify-managed DNS and routing.
 
 ### The Core Team
 gadirli_s

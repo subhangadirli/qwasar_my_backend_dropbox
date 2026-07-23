@@ -38,13 +38,13 @@ README.md          # live URL + description
 ```
 
 ## Phase 1 — Frontend Skeleton
-- [ ] Create React app (`create-react-app` or Vite)
-- [ ] Build placeholder components (each in own file + matching `.css`):
-  - [ ] `NavBar.js` / `.css`
-  - [ ] `FileList.js` / `.css`
-  - [ ] `UploadForm.js` / `.css`
-  - [ ] `FileItem.js` / `.css`
-- [ ] Run locally (`npm start`)
+- [x] Create React app (`create-react-app` or Vite)
+- [x] Build placeholder components (each in own file + matching `.css`):
+  - [x] `NavBar.jsx` / `.css`
+  - [x] `FileList.jsx` / `.css`
+  - [x] `UploadForm.jsx` / `.css`
+  - [x] `FileItem.jsx` / `.css`
+- [x] Run locally (`npm run dev`)
 
 ## Phase 2 — Authentication (Cognito) — *Spec #1*
 - [ ] `amplify add auth` → Cognito user pool (email login)

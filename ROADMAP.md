@@ -99,7 +99,7 @@ zone is registered (kept at $0). Spec #4 is met by the managed routing layer rat
 a self-owned Route 53 zone — a deliberate cost choice to note in peer review.
 
 ## Phase 8 — Polish & Submit
-- [ ] Creative CSS / design pass
+- [x] Creative CSS / design pass (clean minimal, shared light/dark tokens)
 - [x] README: description + live URL + architecture diagram + setup steps
 - [x] Verify `.gitignore` excludes `node_modules/`
 - [x] Confirm "one component per file" + matching CSS rules honored

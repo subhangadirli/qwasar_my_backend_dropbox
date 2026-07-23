@@ -12,16 +12,44 @@
   color: #1f2933;
 }
 
-.file-item-download {
+.file-item-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.file-item-download,
+.file-item-rename,
+.file-item-delete {
   padding: 0.3rem 0.75rem;
   font-size: 0.85rem;
-  color: #3182ce;
   background-color: transparent;
-  border: 1px solid #3182ce;
   border-radius: 4px;
   cursor: pointer;
 }
 
+.file-item-download {
+  color: #3182ce;
+  border: 1px solid #3182ce;
+}
+
 .file-item-download:hover {
   background-color: #ebf4ff;
+}
+
+.file-item-rename {
+  color: #718096;
+  border: 1px solid #718096;
+}
+
+.file-item-rename:hover {
+  background-color: #edf2f7;
+}
+
+.file-item-delete {
+  color: #e53e3e;
+  border: 1px solid #e53e3e;
+}
+
+.file-item-delete:hover {
+  background-color: #fff5f5;
 }

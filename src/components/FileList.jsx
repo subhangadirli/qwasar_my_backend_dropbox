@@ -1,7 +1,7 @@
 import FileItem from "./FileItem";
 import "./FileList.css";
 
-function FileList({ files, loading }) {
+function FileList({ files, loading, onChanged }) {
   if (loading) {
     return (
       <section className="file-list">
@@ -21,7 +21,7 @@ function FileList({ files, loading }) {
   return (
     <section className="file-list">
       {files.map((file) => (
-        <FileItem key={file.path} file={file} />
+        <FileItem key={file.id} file={file} onChanged={onChanged} />
       ))}
     </section>
   );

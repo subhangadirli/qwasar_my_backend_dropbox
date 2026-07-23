@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { uploadData } from "aws-amplify/storage";
+import { client } from "../dataClient";
 import "./UploadForm.css";
 
 function UploadForm({ onUploaded }) {
@@ -15,10 +16,29 @@ function UploadForm({ onUploaded }) {
     setUploading(true);
     setError("");
     try {
-      await uploadData({
+      const { path } = await uploadData({
         path: ({ identityId }) => `files/${identityId}/${file.name}`,
         data: file,
       }).result;
+
+      // Upsert the metadata record so re-uploading the same name bumps its
+      // version instead of creating a duplicate row.
+      const { data: existing } = await client.models.FileRecord.list({
+        filter: { s3Key: { eq: path } },
+      });
+      if (existing.length > 0) {
+        await client.models.FileRecord.update({
+          id: existing[0].id,
+          version: (existing[0].version ?? 1) + 1,
+        });
+      } else {
+        await client.models.FileRecord.create({
+          fileName: file.name,
+          s3Key: path,
+          version: 1,
+        });
+      }
+
       setFile(null);
       event.target.reset();
       onUploaded?.();

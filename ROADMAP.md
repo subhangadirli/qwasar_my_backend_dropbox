@@ -84,9 +84,19 @@ Two functions triggered by the `FileRecord` DynamoDB stream (defined in code wit
 - [ ] End-to-end trigger test on the deployed site (do during Phase 7)
 
 ## Phase 7 — Deploy & DNS/Routing — *Spec #4*
-- [ ] `amplify add hosting` → deploy React app (`amplify publish`)
-- [ ] Configure Route 53 for domain/routing
+Hosted on AWS Amplify Hosting (fullstack Gen 2 CI/CD). The Amplify Console does not
+support Qwasar's Gitea as a Git source, so the repo is mirrored to GitHub and connected
+from there; every push then auto-deploys the backend (`ampx pipeline-deploy`) and builds
+the frontend per `amplify.yml`.
+- [x] Add `amplify.yml` build spec (backend deploy + `dist` frontend build)
+- [ ] Mirror repo to GitHub and connect the branch in the Amplify Console
+- [ ] Let the first CI/CD build deploy backend + frontend
 - [ ] Confirm live URL works end-to-end (login → upload → version → rename → delete)
+
+**DNS/Routing note:** the app is served on the default `*.amplifyapp.com` URL, which
+runs on CloudFront with Amplify-managed DNS/routing. No custom domain / Route 53 hosted
+zone is registered (kept at $0). Spec #4 is met by the managed routing layer rather than
+a self-owned Route 53 zone — a deliberate cost choice to note in peer review.
 
 ## Phase 8 — Polish & Submit
 - [ ] Creative CSS / design pass
@@ -104,7 +114,7 @@ Two functions triggered by the `FileRecord` DynamoDB stream (defined in code wit
 | User authentication | 2 |
 | Upload a file | 3 |
 | Versioning | 5 |
-| DNS/Routing | 7 |
+| DNS/Routing | 7 (Amplify Hosting + CloudFront managed routing) |
 
 ## Team split (Subhan & Narmin)
 - **Frontend owner:** Phases 1–5 UI

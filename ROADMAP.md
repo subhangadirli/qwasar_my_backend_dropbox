@@ -76,11 +76,12 @@ bucket-level versioning, so every version stays independently downloadable.
 - [x] UI: show version history / allow reverting
 
 ## Phase 6 — Lambda Sync Functions
-Two functions triggered by DynamoDB Streams:
-- [ ] **Lambda #1 — Delete sync**: on record delete → delete matching S3 object
-- [ ] **Lambda #2 — Rename sync**: on `fileName` change → copy old S3 object under new name, delete old
-- [ ] `amplify add function` for each; enable DynamoDB stream trigger
-- [ ] Test each trigger end-to-end
+Two functions triggered by the `FileRecord` DynamoDB stream (defined in code with
+`defineFunction` + CDK `EventSourceMapping`, one consumer per event type).
+- [x] **Lambda #1 — Delete sync** (`amplify/functions/delete-sync`): on record REMOVE → delete every version object under the file's S3 prefix
+- [x] **Lambda #2 — Rename sync** (`amplify/functions/rename-sync`): on record MODIFY where `fileName` changed → copy the whole prefix under the new name, delete the old prefix
+- [x] Deploy both functions with stream triggers (filtered by event type) and S3 read/write/delete grants
+- [ ] End-to-end trigger test on the deployed site (do during Phase 7)
 
 ## Phase 7 — Deploy & DNS/Routing — *Spec #4*
 - [ ] `amplify add hosting` → deploy React app (`amplify publish`)

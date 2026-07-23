@@ -49,6 +49,11 @@ metadata record keeps pointing at the current version. Use the Versions button o
 file to see its full history, download any past version, or revert to one, which
 copies that version's object forward as a new current version.
 
+Delete and rename only touch the DynamoDB metadata. Two Lambda functions subscribed
+to the metadata table's stream keep S3 in step: deleting a record removes all of that
+file's version objects, and renaming a record copies its objects under the new name
+and removes the old ones.
+
 ### The Core Team
 gadirli_s
 hajibala_n

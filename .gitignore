@@ -12,6 +12,11 @@ dist
 dist-ssr
 *.local
 
+# Amplify generated artifacts (created on deploy)
+.amplify
+amplify_outputs*
+amplifyconfiguration*
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

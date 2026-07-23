@@ -81,7 +81,8 @@ Two functions triggered by the `FileRecord` DynamoDB stream (defined in code wit
 - [x] **Lambda #1 — Delete sync** (`amplify/functions/delete-sync`): on record REMOVE → delete every version object under the file's S3 prefix
 - [x] **Lambda #2 — Rename sync** (`amplify/functions/rename-sync`): on record MODIFY where `fileName` changed → copy the whole prefix under the new name, delete the old prefix
 - [x] Deploy both functions with stream triggers (filtered by event type) and S3 read/write/delete grants
-- [ ] End-to-end trigger test on the deployed site (do during Phase 7)
+- [x] Rename also updates FileVersion keys so version history survives a rename
+- [ ] End-to-end trigger test on the deployed site (manual check on live site)
 
 ## Phase 7 — Deploy & DNS/Routing — *Spec #4*
 Hosted on AWS Amplify Hosting (fullstack Gen 2 CI/CD). The Amplify Console does not

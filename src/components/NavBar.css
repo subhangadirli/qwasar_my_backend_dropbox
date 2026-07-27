@@ -16,8 +16,25 @@
 
 .nav-bar-account {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 1rem;
+}
+
+/* View switch: the current view is the disabled, emphasised one. */
+.nav-bar-link {
+  padding: 0.2rem 0;
+  font: inherit;
+  font-size: 0.85rem;
+  color: var(--accent);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.nav-bar-link:disabled {
+  color: var(--text-strong);
+  cursor: default;
 }
 
 .nav-bar-user {

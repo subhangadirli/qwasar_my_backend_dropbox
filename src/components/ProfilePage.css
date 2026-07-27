@@ -1,0 +1,185 @@
+.profile-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 1.5rem 0;
+}
+
+.profile-page-identity {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.profile-page-avatar {
+  width: 56px;
+  height: 56px;
+  flex: none;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--border);
+}
+
+.profile-page-avatar-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  color: var(--text-strong);
+  background-color: var(--surface);
+}
+
+.profile-page-identity-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.profile-page-name {
+  font-size: 1.05rem;
+  color: var(--text-strong);
+}
+
+.profile-page-email {
+  font-size: 0.85rem;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.profile-page-avatar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.profile-page-avatar-upload {
+  padding: 0.35rem 0.85rem;
+  font-size: 0.85rem;
+  color: var(--text-strong);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background-color 0.12s ease;
+}
+
+.profile-page-avatar-upload:hover {
+  background-color: var(--surface-hover);
+}
+
+/* The label is the visible control, so the input itself stays hidden. */
+.profile-page-avatar-upload input {
+  display: none;
+}
+
+.profile-page-avatar-remove {
+  padding: 0.35rem 0.85rem;
+  font: inherit;
+  font-size: 0.85rem;
+  color: var(--text);
+  background-color: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: color 0.12s ease, border-color 0.12s ease,
+    background-color 0.12s ease;
+}
+
+.profile-page-avatar-remove:hover:not(:disabled) {
+  color: var(--danger);
+  border-color: var(--danger);
+  background-color: var(--danger-weak);
+}
+
+.profile-page-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+}
+
+.profile-page-label {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.profile-page-input,
+.profile-page-textarea {
+  padding: 0.45rem 0.7rem;
+  font: inherit;
+  font-size: 0.9rem;
+  color: var(--text-strong);
+  background-color: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+.profile-page-input:focus,
+.profile-page-textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.profile-page-save {
+  align-self: flex-start;
+  margin-top: 0.5rem;
+  padding: 0.45rem 1.1rem;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #ffffff;
+  background-color: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: opacity 0.12s ease;
+}
+
+.profile-page-save:hover:not(:disabled) {
+  opacity: 0.88;
+}
+
+.profile-page-save:disabled {
+  color: var(--muted);
+  background-color: transparent;
+  border-color: var(--border);
+  cursor: not-allowed;
+}
+
+.profile-page-status {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.profile-page-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+  gap: 0.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+}
+
+.profile-page-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background-color: var(--surface);
+}
+
+.profile-page-stat-value {
+  font-size: 1.1rem;
+  color: var(--text-strong);
+}
+
+.profile-page-stat-label {
+  font-size: 0.78rem;
+  color: var(--muted);
+}

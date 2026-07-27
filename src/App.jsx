@@ -9,6 +9,7 @@ import NewFolderForm from './components/NewFolderForm'
 import UploadForm from './components/UploadForm'
 import FolderList from './components/FolderList'
 import FileList from './components/FileList'
+import ProfilePage from './components/ProfilePage'
 import './App.css'
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
   const [files, setFiles] = useState([])
   const [currentFolderId, setCurrentFolderId] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [view, setView] = useState('files')
 
   const loadDrive = useCallback(async () => {
     setLoading(true)
@@ -96,30 +98,41 @@ function App() {
     <Authenticator>
       {({ signOut, user }) => (
         <div className="app">
-          <NavBar user={user} signOut={signOut} />
+          <NavBar
+            user={user}
+            view={view}
+            onNavigate={setView}
+            signOut={signOut}
+          />
           <main className="app-main">
-            <Breadcrumbs
-              folders={folders}
-              currentFolderId={currentFolderId}
-              onNavigate={setCurrentFolderId}
-            />
-            <NewFolderForm
-              parentFolderId={currentFolderId}
-              onCreated={loadDrive}
-            />
-            <UploadForm folderId={currentFolderId} onUploaded={loadDrive} />
-            <FolderList
-              folders={visibleFolders}
-              onOpen={setCurrentFolderId}
-              onRename={handleRenameFolder}
-              onDelete={handleDeleteFolder}
-            />
-            <FileList
-              files={visibleFiles}
-              folderOptions={moveTargets}
-              loading={loading}
-              onChanged={loadDrive}
-            />
+            {view === 'profile' ? (
+              <ProfilePage user={user} files={files} folders={folders} />
+            ) : (
+              <>
+                <Breadcrumbs
+                  folders={folders}
+                  currentFolderId={currentFolderId}
+                  onNavigate={setCurrentFolderId}
+                />
+                <NewFolderForm
+                  parentFolderId={currentFolderId}
+                  onCreated={loadDrive}
+                />
+                <UploadForm folderId={currentFolderId} onUploaded={loadDrive} />
+                <FolderList
+                  folders={visibleFolders}
+                  onOpen={setCurrentFolderId}
+                  onRename={handleRenameFolder}
+                  onDelete={handleDeleteFolder}
+                />
+                <FileList
+                  files={visibleFiles}
+                  folderOptions={moveTargets}
+                  loading={loading}
+                  onChanged={loadDrive}
+                />
+              </>
+            )}
           </main>
         </div>
       )}

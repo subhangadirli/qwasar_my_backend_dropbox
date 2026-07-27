@@ -11,8 +11,10 @@ const BUCKET_NAME = process.env.BUCKET_NAME as string;
 /**
  * On FileRecord delete, wipe every version object for that file.
  *
- * The stored s3Key looks like `files/{identityId}/{fileName}/v{n}`, so the
- * file's prefix is everything up to (and including) the final slash. Listing
+ * The stored s3Key looks like `files/{identityId}/{folderId}/{fileName}/v{n}`,
+ * so the file's prefix is everything up to (and including) the final slash.
+ * That holds whatever folder the file sits in, so nothing here is folder-aware.
+ * Listing
  * and deleting that prefix removes all versions at once.
  */
 export const handler: DynamoDBStreamHandler = async (event) => {

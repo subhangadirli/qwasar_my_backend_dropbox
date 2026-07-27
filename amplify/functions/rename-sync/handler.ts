@@ -10,12 +10,16 @@ const s3 = new S3Client();
 const BUCKET_NAME = process.env.BUCKET_NAME as string;
 
 /**
- * On a FileRecord rename, mirror the change in S3.
+ * On a FileRecord rename or folder move, mirror the change in S3.
  *
- * s3Key is `files/{identityId}/{fileName}/v{n}`, so the file prefix is
- * everything up to the final slash. When only the name changed, copy every
+ * s3Key is `files/{identityId}/{folderId}/{fileName}/v{n}`, so the file prefix
+ * is everything up to the final slash. Both a rename and a move rewrite that
+ * prefix, so comparing prefixes covers each case with one rule: copy every
  * object under the old prefix to the new prefix (preserving the v{n} tail),
  * then delete the old prefix.
+ *
+ * A plain version bump only changes the `/v{n}` tail, leaving the prefix
+ * identical, so it is skipped here.
  */
 export const handler: DynamoDBStreamHandler = async (event) => {
   for (const record of event.Records) {
@@ -23,12 +27,10 @@ export const handler: DynamoDBStreamHandler = async (event) => {
       continue;
     }
 
-    const oldName = record.dynamodb?.OldImage?.fileName?.S;
-    const newName = record.dynamodb?.NewImage?.fileName?.S;
     const oldKey = record.dynamodb?.OldImage?.s3Key?.S;
     const newKey = record.dynamodb?.NewImage?.s3Key?.S;
 
-    if (!oldName || !newName || oldName === newName || !oldKey || !newKey) {
+    if (!oldKey || !newKey) {
       continue;
     }
 

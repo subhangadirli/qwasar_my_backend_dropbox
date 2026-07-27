@@ -107,6 +107,24 @@ a self-owned Route 53 zone — a deliberate cost choice to note in peer review.
 - [ ] Final end-to-end test on deployed site
 - [ ] Submit + prep for Peer Review
 
+## Phase 9 — Extended Feature Set
+Beyond the four graded specs, the assignment's question list also covers folders, a
+profile, previews, and sharing. All of these are metadata-first: the existing S3
+layout and the two sync Lambdas absorb them without new infrastructure.
+- [x] `Folder` model (`parentFolderId` nesting) and `folderId` on `FileRecord`
+- [x] Folder id is part of the S3 key, so same-named files in different folders no
+      longer collide (`files/{identityId}/{folderId}/{fileName}/v{n}`)
+- [x] Breadcrumb navigation, create folder, rename folder, recursive folder delete
+- [x] Move a file between folders (the rename Lambda now keys off the S3 prefix, so
+      one rule covers both rename and move)
+- [x] Inline preview: images, PDFs, video, audio, text (`contentType` captured on
+      upload, file extension used as a fallback for older records)
+- [x] Public share links: presigned URL with a chosen expiry, recorded as a
+      `ShareLink` row so shares stay listable and revocable
+- [x] Profile page: display name, bio, avatar (`profile/{entity_id}/*`), and storage
+      statistics
+- [ ] End-to-end check of the new features on the deployed site
+
 ---
 
 ## Spec coverage

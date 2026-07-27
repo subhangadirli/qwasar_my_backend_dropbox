@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { copy, getUrl } from "aws-amplify/storage";
 import { client } from "../dataClient";
+import { deleteFileRecord } from "../fileActions";
+import { withFileName, withFolder, withVersion } from "../fileKeys";
+import { formatBytes } from "../format";
 import "./FileItem.css";
 
-function FileItem({ file, onChanged }) {
+function FileItem({ file, folderOptions, onChanged }) {
   const [showVersions, setShowVersions] = useState(false);
   const [versions, setVersions] = useState([]);
   const [loadingVersions, setLoadingVersions] = useState(false);
@@ -31,6 +34,22 @@ function FileItem({ file, onChanged }) {
     }
   }
 
+  // Every version object moves with the file, so the version rows have to be
+  // pointed at their new keys whenever the record's own key is rewritten.
+  async function remapVersionKeys(mapKey) {
+    const { data: fileVersions } = await client.models.FileVersion.list({
+      filter: { fileRecordId: { eq: file.id } },
+    });
+    await Promise.all(
+      fileVersions.map((version) =>
+        client.models.FileVersion.update({
+          id: version.id,
+          s3Key: mapKey(version.s3Key),
+        })
+      )
+    );
+  }
+
   async function handleRevert(oldVersion) {
     if (
       !window.confirm(
@@ -40,10 +59,7 @@ function FileItem({ file, onChanged }) {
       return;
     }
     const nextVersion = file.version + 1;
-    const newPath = oldVersion.s3Key.replace(
-      /\/v\d+$/,
-      `/v${nextVersion}`
-    );
+    const newPath = withVersion(oldVersion.s3Key, nextVersion);
 
     await copy({
       source: { path: oldVersion.s3Key },
@@ -69,31 +85,29 @@ function FileItem({ file, onChanged }) {
     if (!newName || newName === file.fileName) {
       return;
     }
-    // Swap the fileName segment of a versioned key (files/{id}/{name}/v{n}).
-    const renameKey = (key) => {
-      const parts = key.split("/");
-      parts[parts.length - 2] = newName;
-      return parts.join("/");
-    };
-    // Point every version row at its new key too, so version history stays
-    // downloadable after the Phase 6 rename Lambda moves the S3 objects.
-    const { data: fileVersions } = await client.models.FileVersion.list({
-      filter: { fileRecordId: { eq: file.id } },
-    });
-    await Promise.all(
-      fileVersions.map((version) =>
-        client.models.FileVersion.update({
-          id: version.id,
-          s3Key: renameKey(version.s3Key),
-        })
-      )
-    );
-    // Renaming the record's fileName is what triggers the Phase 6 Lambda that
+    await remapVersionKeys((key) => withFileName(key, newName));
+    // Rewriting the record's key is what triggers the Phase 6 Lambda that
     // mirrors the move in S3 (copy under the new prefix, delete the old).
     await client.models.FileRecord.update({
       id: file.id,
       fileName: newName,
-      s3Key: renameKey(file.s3Key),
+      s3Key: withFileName(file.s3Key, newName),
+    });
+    onChanged?.();
+  }
+
+  async function handleMove(event) {
+    const targetFolderId = event.target.value || null;
+    if ((file.folderId ?? null) === targetFolderId) {
+      return;
+    }
+    await remapVersionKeys((key) => withFolder(key, targetFolderId));
+    // The folder is part of the S3 key, so the same Lambda that handles a
+    // rename relocates the objects for a move.
+    await client.models.FileRecord.update({
+      id: file.id,
+      folderId: targetFolderId,
+      s3Key: withFolder(file.s3Key, targetFolderId),
     });
     onChanged?.();
   }
@@ -102,25 +116,34 @@ function FileItem({ file, onChanged }) {
     if (!window.confirm(`Delete "${file.fileName}"?`)) {
       return;
     }
-    const { data: fileVersions } = await client.models.FileVersion.list({
-      filter: { fileRecordId: { eq: file.id } },
-    });
-    await Promise.all(
-      fileVersions.map((version) =>
-        client.models.FileVersion.delete({ id: version.id })
-      )
-    );
     // Deleting the record triggers the Phase 6 Lambda that removes the S3 objects.
-    await client.models.FileRecord.delete({ id: file.id });
+    await deleteFileRecord(file.id);
     onChanged?.();
   }
+
+  const size = formatBytes(file.size);
 
   return (
     <div className="file-item">
       <div className="file-item-row">
         <span className="file-item-name">{file.fileName}</span>
-        <span className="file-item-version">v{file.version}</span>
+        <span className="file-item-meta">
+          v{file.version}
+          {size && ` - ${size}`}
+        </span>
         <div className="file-item-actions">
+          <select
+            className="file-item-move"
+            value={file.folderId ?? ""}
+            onChange={handleMove}
+            aria-label={`Move ${file.fileName} to a folder`}
+          >
+            {folderOptions.map((option) => (
+              <option key={option.id ?? "root"} value={option.id ?? ""}>
+                {option.path}
+              </option>
+            ))}
+          </select>
           <button
             type="button"
             className="file-item-download"

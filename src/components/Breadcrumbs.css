@@ -1,0 +1,37 @@
+.breadcrumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 1.25rem 0 0;
+  font-size: 0.9rem;
+}
+
+.breadcrumbs-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.breadcrumbs-separator {
+  color: var(--muted);
+}
+
+.breadcrumbs-crumb {
+  padding: 0.15rem 0.35rem;
+  font: inherit;
+  color: var(--accent);
+  background: none;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.breadcrumbs-crumb:hover:not(:disabled) {
+  background-color: var(--surface-hover);
+}
+
+.breadcrumbs-crumb:disabled {
+  color: var(--text-strong);
+  cursor: default;
+}

@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { uploadData } from "aws-amplify/storage";
 import { client } from "../dataClient";
+import { folderSegment } from "../fileKeys";
 import "./UploadForm.css";
 
-function UploadForm({ onUploaded }) {
+function UploadForm({ folderId, onUploaded }) {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
@@ -16,36 +17,43 @@ function UploadForm({ onUploaded }) {
     setUploading(true);
     setError("");
     try {
-      const { data: existing } = await client.models.FileRecord.list({
+      // A name only clashes within the same folder, so the version bump has to
+      // be scoped to the folder being uploaded into.
+      const { data: sameName } = await client.models.FileRecord.list({
         filter: { fileName: { eq: file.name } },
       });
-      const record = existing[0];
+      const record = sameName.find(
+        (candidate) => (candidate.folderId ?? null) === (folderId ?? null)
+      );
       const nextVersion = (record?.version ?? 0) + 1;
 
       // Each version gets its own S3 key so earlier versions stay downloadable
       // and revertible instead of being overwritten by the next upload.
       const { path } = await uploadData({
         path: ({ identityId }) =>
-          `files/${identityId}/${file.name}/v${nextVersion}`,
+          `files/${identityId}/${folderSegment(folderId)}/${file.name}/v${nextVersion}`,
         data: file,
       }).result;
+
+      const metadata = {
+        s3Key: path,
+        version: nextVersion,
+        size: file.size,
+        contentType: file.type || "application/octet-stream",
+      };
 
       const fileRecordId = record
         ? record.id
         : (
             await client.models.FileRecord.create({
               fileName: file.name,
-              s3Key: path,
-              version: nextVersion,
+              folderId: folderId ?? null,
+              ...metadata,
             })
           ).data.id;
 
       if (record) {
-        await client.models.FileRecord.update({
-          id: record.id,
-          s3Key: path,
-          version: nextVersion,
-        });
+        await client.models.FileRecord.update({ id: record.id, ...metadata });
       }
 
       await client.models.FileVersion.create({

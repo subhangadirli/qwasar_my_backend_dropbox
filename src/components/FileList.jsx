@@ -1,7 +1,7 @@
 import FileItem from "./FileItem";
 import "./FileList.css";
 
-function FileList({ files, loading, onChanged }) {
+function FileList({ files, folderOptions, loading, onChanged }) {
   if (loading) {
     return (
       <section className="file-list">
@@ -13,7 +13,7 @@ function FileList({ files, loading, onChanged }) {
   if (files.length === 0) {
     return (
       <section className="file-list">
-        <p className="file-list-empty">No files yet.</p>
+        <p className="file-list-empty">No files here yet.</p>
       </section>
     );
   }
@@ -21,7 +21,12 @@ function FileList({ files, loading, onChanged }) {
   return (
     <section className="file-list">
       {files.map((file) => (
-        <FileItem key={file.id} file={file} onChanged={onChanged} />
+        <FileItem
+          key={file.id}
+          file={file}
+          folderOptions={folderOptions}
+          onChanged={onChanged}
+        />
       ))}
     </section>
   );

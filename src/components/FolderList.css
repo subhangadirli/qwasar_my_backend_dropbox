@@ -1,0 +1,6 @@
+.folder-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.25rem 0 0;
+}

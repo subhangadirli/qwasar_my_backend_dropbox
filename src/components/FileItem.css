@@ -19,11 +19,31 @@
   color: var(--text-strong);
 }
 
-.file-item-version {
+.file-item-meta {
   font-size: 0.75rem;
   color: var(--muted);
   margin-right: auto;
   margin-left: 0.5rem;
+  white-space: nowrap;
+}
+
+/* The move control is a select so the whole folder tree is reachable in one
+   click without a separate dialog. */
+.file-item-move {
+  max-width: 9rem;
+  padding: 0.3rem 0.4rem;
+  font: inherit;
+  font-size: 0.82rem;
+  color: var(--text);
+  background-color: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.file-item-move:hover {
+  color: var(--text-strong);
+  border-color: var(--muted);
 }
 
 .file-item-actions {

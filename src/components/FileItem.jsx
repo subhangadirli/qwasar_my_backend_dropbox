@@ -4,9 +4,11 @@ import { client } from "../dataClient";
 import { deleteFileRecord } from "../fileActions";
 import { withFileName, withFolder, withVersion } from "../fileKeys";
 import { formatBytes } from "../format";
+import FilePreview from "./FilePreview";
 import "./FileItem.css";
 
 function FileItem({ file, folderOptions, onChanged }) {
+  const [showPreview, setShowPreview] = useState(false);
   const [showVersions, setShowVersions] = useState(false);
   const [versions, setVersions] = useState([]);
   const [loadingVersions, setLoadingVersions] = useState(false);
@@ -146,6 +148,13 @@ function FileItem({ file, folderOptions, onChanged }) {
           </select>
           <button
             type="button"
+            className="file-item-preview"
+            onClick={() => setShowPreview(true)}
+          >
+            Preview
+          </button>
+          <button
+            type="button"
             className="file-item-download"
             onClick={() => handleDownload(file.s3Key)}
           >
@@ -211,6 +220,10 @@ function FileItem({ file, folderOptions, onChanged }) {
               </div>
             ))}
         </div>
+      )}
+
+      {showPreview && (
+        <FilePreview file={file} onClose={() => setShowPreview(false)} />
       )}
     </div>
   );

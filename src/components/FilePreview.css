@@ -1,0 +1,99 @@
+.file-preview-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  background-color: rgba(0, 0, 0, 0.55);
+}
+
+.file-preview {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 900px;
+  max-height: 90svh;
+  background-color: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.file-preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.7rem 0.9rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.file-preview-title {
+  font-size: 0.95rem;
+  color: var(--text-strong);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.file-preview-close {
+  padding: 0.3rem 0.75rem;
+  font: inherit;
+  font-size: 0.82rem;
+  color: var(--text);
+  background-color: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.file-preview-close:hover {
+  color: var(--text-strong);
+  border-color: var(--muted);
+  background-color: var(--surface-hover);
+}
+
+.file-preview-body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.9rem;
+  overflow: auto;
+}
+
+.file-preview-note {
+  margin: 0;
+  padding: 1.5rem 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+  text-align: center;
+}
+
+.file-preview-image {
+  max-width: 100%;
+  max-height: 70svh;
+  object-fit: contain;
+}
+
+.file-preview-frame {
+  width: 100%;
+  height: 70svh;
+  border: none;
+}
+
+.file-preview-media {
+  width: 100%;
+  max-height: 70svh;
+}
+
+.file-preview-text {
+  width: 100%;
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--text);
+  white-space: pre-wrap;
+  word-break: break-word;
+}

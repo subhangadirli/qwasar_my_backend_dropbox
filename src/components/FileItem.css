@@ -53,6 +53,7 @@
 }
 
 /* All actions share a quiet, thin-outlined base; color is applied on hover. */
+.file-item-preview,
 .file-item-download,
 .file-item-versions,
 .file-item-rename,
@@ -69,6 +70,7 @@
     background-color 0.12s ease;
 }
 
+.file-item-preview:hover,
 .file-item-download:hover,
 .file-item-versions:hover {
   color: var(--accent);

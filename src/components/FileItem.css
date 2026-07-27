@@ -92,6 +92,22 @@
   background-color: var(--danger-weak);
 }
 
+.file-item-error {
+  margin: 0.5rem 0 0;
+  font-size: 0.82rem;
+  color: var(--danger);
+}
+
+/* A row locks while one of its actions is in flight. */
+.file-item-move:disabled,
+.file-item-rename:disabled,
+.file-item-delete:disabled {
+  color: var(--muted);
+  border-color: var(--border);
+  background-color: transparent;
+  cursor: not-allowed;
+}
+
 .file-item-history {
   display: flex;
   flex-direction: column;

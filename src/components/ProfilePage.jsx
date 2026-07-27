@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { getUrl, remove, uploadData } from "aws-amplify/storage";
 import { client } from "../dataClient";
 import { formatBytes } from "../format";
@@ -18,11 +18,19 @@ function ProfilePage({ user, files, folders }) {
   const [shareCount, setShareCount] = useState(0);
   const [status, setStatus] = useState("Loading profile...");
   const [saving, setSaving] = useState(false);
+  // The profile row is created lazily, so the load has to be guarded: React
+  // runs effects twice in development, and two concurrent loads would both see
+  // an empty list and each create a row.
+  const loadingRef = useRef(null);
 
   const loadProfile = useCallback(async () => {
-    const { data } = await client.models.UserProfile.list();
-    const existing =
-      data[0] ?? (await client.models.UserProfile.create({})).data;
+    if (!loadingRef.current) {
+      loadingRef.current = (async () => {
+        const { data } = await client.models.UserProfile.list();
+        return data[0] ?? (await client.models.UserProfile.create({})).data;
+      })();
+    }
+    const existing = await loadingRef.current;
     setProfile(existing);
     setDisplayName(existing.displayName ?? "");
     setBio(existing.bio ?? "");

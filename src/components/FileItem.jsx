@@ -14,6 +14,27 @@ function FileItem({ file, folderOptions, onChanged }) {
   const [showVersions, setShowVersions] = useState(false);
   const [versions, setVersions] = useState([]);
   const [loadingVersions, setLoadingVersions] = useState(false);
+  // Every action that writes rewrites S3 keys across several rows, so the row
+  // locks itself while one is in flight. Without this, a double click (or a
+  // second pick in the move dropdown) can interleave two key rewrites and
+  // leave the version rows pointing somewhere the record does not.
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+
+  async function runAction(action) {
+    if (busy) {
+      return;
+    }
+    setBusy(true);
+    setError("");
+    try {
+      await action();
+    } catch {
+      setError("That action did not go through. Please try again.");
+    } finally {
+      setBusy(false);
+    }
+  }
 
   async function handleDownload(path) {
     const { url } = await getUrl({ path });
@@ -100,8 +121,7 @@ function FileItem({ file, folderOptions, onChanged }) {
     onChanged?.();
   }
 
-  async function handleMove(event) {
-    const targetFolderId = event.target.value || null;
+  async function handleMove(targetFolderId) {
     if ((file.folderId ?? null) === targetFolderId) {
       return;
     }
@@ -139,7 +159,10 @@ function FileItem({ file, folderOptions, onChanged }) {
           <select
             className="file-item-move"
             value={file.folderId ?? ""}
-            onChange={handleMove}
+            onChange={(event) =>
+              runAction(() => handleMove(event.target.value || null))
+            }
+            disabled={busy}
             aria-label={`Move ${file.fileName} to a folder`}
           >
             {folderOptions.map((option) => (
@@ -179,19 +202,23 @@ function FileItem({ file, folderOptions, onChanged }) {
           <button
             type="button"
             className="file-item-rename"
-            onClick={handleRename}
+            onClick={() => runAction(handleRename)}
+            disabled={busy}
           >
             Rename
           </button>
           <button
             type="button"
             className="file-item-delete"
-            onClick={handleDelete}
+            onClick={() => runAction(handleDelete)}
+            disabled={busy}
           >
             Delete
           </button>
         </div>
       </div>
+
+      {error && <p className="file-item-error">{error}</p>}
 
       {showVersions && (
         <div className="file-item-history">
@@ -220,7 +247,8 @@ function FileItem({ file, folderOptions, onChanged }) {
                     <button
                       type="button"
                       className="file-item-rename"
-                      onClick={() => handleRevert(version)}
+                      onClick={() => runAction(() => handleRevert(version))}
+                      disabled={busy}
                     >
                       Revert
                     </button>

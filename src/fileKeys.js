@@ -14,8 +14,13 @@ export function folderSegment(folderId) {
   return folderId ?? ROOT_SEGMENT;
 }
 
+// Returns null for anything that is not a recognisable file key, so callers
+// can leave such a key alone rather than rewriting it into nonsense.
 function parseKey(key) {
   const parts = key.split('/');
+  if (parts.length < 4 || parts[0] !== 'files') {
+    return null;
+  }
   return {
     identityId: parts[1],
     segment: parts.length >= 5 ? parts[2] : ROOT_SEGMENT,
@@ -30,15 +35,20 @@ function buildKey({ identityId, segment, fileName, versionTail }) {
 
 // Same file, new name: used by rename.
 export function withFileName(key, fileName) {
-  return buildKey({ ...parseKey(key), fileName });
+  const parsed = parseKey(key);
+  return parsed ? buildKey({ ...parsed, fileName }) : key;
 }
 
 // Same file, new folder: used by move.
 export function withFolder(key, folderId) {
-  return buildKey({ ...parseKey(key), segment: folderSegment(folderId) });
+  const parsed = parseKey(key);
+  return parsed
+    ? buildKey({ ...parsed, segment: folderSegment(folderId) })
+    : key;
 }
 
 // Same file, next version: used by revert.
 export function withVersion(key, version) {
-  return buildKey({ ...parseKey(key), versionTail: `v${version}` });
+  const parsed = parseKey(key);
+  return parsed ? buildKey({ ...parsed, versionTail: `v${version}` }) : key;
 }

@@ -13,6 +13,7 @@ const TEXT_LIMIT = 200000;
 function FilePreview({ file, onClose }) {
   const [url, setUrl] = useState("");
   const [text, setText] = useState("");
+  const [textFailed, setTextFailed] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -30,10 +31,19 @@ function FilePreview({ file, onClose }) {
         const href = result.url.toString();
         setUrl(href);
         if (kind === "text") {
-          const response = await fetch(href);
-          const body = await response.text();
-          if (active) {
-            setText(body.slice(0, TEXT_LIMIT));
+          try {
+            const response = await fetch(href);
+            const body = await response.text();
+            if (active) {
+              setText(body.slice(0, TEXT_LIMIT));
+            }
+          } catch {
+            // Reading the body needs a cross-origin fetch. If that is ever
+            // blocked, let the browser render the file itself rather than
+            // failing the whole preview.
+            if (active) {
+              setTextFailed(true);
+            }
           }
         }
       } catch {
@@ -94,6 +104,13 @@ function FilePreview({ file, onClose }) {
           {!loading && !error && kind === "image" && (
             <img className="file-preview-image" src={url} alt={file.fileName} />
           )}
+          {!loading && !error && kind === "text" && textFailed && (
+            <iframe
+              className="file-preview-frame"
+              src={url}
+              title={file.fileName}
+            />
+          )}
           {!loading && !error && kind === "pdf" && (
             <iframe
               className="file-preview-frame"
@@ -107,7 +124,7 @@ function FilePreview({ file, onClose }) {
           {!loading && !error && kind === "audio" && (
             <audio className="file-preview-media" src={url} controls />
           )}
-          {!loading && !error && kind === "text" && (
+          {!loading && !error && kind === "text" && !textFailed && (
             <pre className="file-preview-text">{text}</pre>
           )}
           {!loading && !error && kind === "none" && (

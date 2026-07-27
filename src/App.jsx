@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Authenticator } from '@aws-amplify/ui-react'
 import { client } from './dataClient'
 import { deleteFileRecord } from './fileActions'
@@ -18,6 +18,9 @@ function App() {
   const [currentFolderId, setCurrentFolderId] = useState(null)
   const [loading, setLoading] = useState(false)
   const [view, setView] = useState('files')
+  // A folder delete cascades over many rows, so keep two of them from
+  // overlapping if the button is clicked again before the first one finishes.
+  const folderActionRef = useRef(false)
 
   const loadDrive = useCallback(async () => {
     setLoading(true)
@@ -61,16 +64,24 @@ function App() {
 
   async function handleRenameFolder(folder) {
     const newName = window.prompt('New folder name:', folder.name)
-    if (!newName || newName === folder.name) {
+    if (!newName || newName === folder.name || folderActionRef.current) {
       return
     }
-    // Folders are referenced by id inside S3 keys, so a folder rename touches
-    // metadata only and no objects have to move.
-    await client.models.Folder.update({ id: folder.id, name: newName })
-    loadDrive()
+    folderActionRef.current = true
+    try {
+      // Folders are referenced by id inside S3 keys, so a folder rename touches
+      // metadata only and no objects have to move.
+      await client.models.Folder.update({ id: folder.id, name: newName })
+      loadDrive()
+    } finally {
+      folderActionRef.current = false
+    }
   }
 
   async function handleDeleteFolder(folder) {
+    if (folderActionRef.current) {
+      return
+    }
     const doomedFolderIds = folderAndDescendantIds(folders, folder.id)
     const doomedFiles = files.filter((file) =>
       doomedFolderIds.includes(file.folderId)
@@ -82,16 +93,21 @@ function App() {
     ) {
       return
     }
-    for (const file of doomedFiles) {
-      await deleteFileRecord(file.id)
+    folderActionRef.current = true
+    try {
+      for (const file of doomedFiles) {
+        await deleteFileRecord(file.id)
+      }
+      await Promise.all(
+        doomedFolderIds.map((id) => client.models.Folder.delete({ id }))
+      )
+      if (doomedFolderIds.includes(currentFolderId)) {
+        setCurrentFolderId(folder.parentFolderId ?? null)
+      }
+      loadDrive()
+    } finally {
+      folderActionRef.current = false
     }
-    await Promise.all(
-      doomedFolderIds.map((id) => client.models.Folder.delete({ id }))
-    )
-    if (doomedFolderIds.includes(currentFolderId)) {
-      setCurrentFolderId(folder.parentFolderId ?? null)
-    }
-    loadDrive()
   }
 
   return (

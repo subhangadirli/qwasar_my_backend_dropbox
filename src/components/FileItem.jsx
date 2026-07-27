@@ -5,10 +5,12 @@ import { deleteFileRecord } from "../fileActions";
 import { withFileName, withFolder, withVersion } from "../fileKeys";
 import { formatBytes } from "../format";
 import FilePreview from "./FilePreview";
+import ShareDialog from "./ShareDialog";
 import "./FileItem.css";
 
 function FileItem({ file, folderOptions, onChanged }) {
   const [showPreview, setShowPreview] = useState(false);
+  const [showShare, setShowShare] = useState(false);
   const [showVersions, setShowVersions] = useState(false);
   const [versions, setVersions] = useState([]);
   const [loadingVersions, setLoadingVersions] = useState(false);
@@ -162,6 +164,13 @@ function FileItem({ file, folderOptions, onChanged }) {
           </button>
           <button
             type="button"
+            className="file-item-share"
+            onClick={() => setShowShare(true)}
+          >
+            Share
+          </button>
+          <button
+            type="button"
             className="file-item-versions"
             onClick={toggleVersions}
           >
@@ -224,6 +233,10 @@ function FileItem({ file, folderOptions, onChanged }) {
 
       {showPreview && (
         <FilePreview file={file} onClose={() => setShowPreview(false)} />
+      )}
+
+      {showShare && (
+        <ShareDialog file={file} onClose={() => setShowShare(false)} />
       )}
     </div>
   );

@@ -1,0 +1,183 @@
+.share-dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  background-color: rgba(0, 0, 0, 0.55);
+}
+
+.share-dialog {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 560px;
+  max-height: 90svh;
+  background-color: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.share-dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.7rem 0.9rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.share-dialog-title {
+  font-size: 0.95rem;
+  color: var(--text-strong);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.share-dialog-close {
+  padding: 0.3rem 0.75rem;
+  font: inherit;
+  font-size: 0.82rem;
+  color: var(--text);
+  background-color: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.share-dialog-close:hover {
+  color: var(--text-strong);
+  border-color: var(--muted);
+  background-color: var(--surface-hover);
+}
+
+.share-dialog-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.9rem;
+  overflow: auto;
+}
+
+.share-dialog-create {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.share-dialog-label {
+  font-size: 0.85rem;
+  color: var(--text);
+}
+
+.share-dialog-select {
+  padding: 0.35rem 0.5rem;
+  font: inherit;
+  font-size: 0.85rem;
+  color: var(--text-strong);
+  background-color: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.share-dialog-button {
+  margin-left: auto;
+  padding: 0.4rem 1rem;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #ffffff;
+  background-color: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: opacity 0.12s ease;
+}
+
+.share-dialog-button:hover:not(:disabled) {
+  opacity: 0.88;
+}
+
+.share-dialog-button:disabled {
+  color: var(--muted);
+  background-color: transparent;
+  border-color: var(--border);
+  cursor: not-allowed;
+}
+
+.share-dialog-error {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--danger);
+}
+
+.share-dialog-empty {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.share-dialog-share {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background-color: var(--surface);
+}
+
+.share-dialog-url {
+  width: 100%;
+  padding: 0.35rem 0.5rem;
+  font-size: 0.78rem;
+  color: var(--text);
+  background-color: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-sizing: border-box;
+}
+
+.share-dialog-share-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.share-dialog-expiry {
+  margin-right: auto;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.share-dialog-copy,
+.share-dialog-revoke {
+  padding: 0.25rem 0.7rem;
+  font: inherit;
+  font-size: 0.8rem;
+  color: var(--text);
+  background-color: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: color 0.12s ease, border-color 0.12s ease,
+    background-color 0.12s ease;
+}
+
+.share-dialog-copy:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  background-color: var(--accent-weak);
+}
+
+.share-dialog-revoke:hover {
+  color: var(--danger);
+  border-color: var(--danger);
+  background-color: var(--danger-weak);
+}

@@ -55,6 +55,7 @@
 /* All actions share a quiet, thin-outlined base; color is applied on hover. */
 .file-item-preview,
 .file-item-download,
+.file-item-share,
 .file-item-versions,
 .file-item-rename,
 .file-item-delete {
@@ -72,6 +73,7 @@
 
 .file-item-preview:hover,
 .file-item-download:hover,
+.file-item-share:hover,
 .file-item-versions:hover {
   color: var(--accent);
   border-color: var(--accent);
